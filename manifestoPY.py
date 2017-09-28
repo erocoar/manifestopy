@@ -12,6 +12,9 @@ import operator
 
 
 class Manifesto(object):
+    #functions: meta_format, text_format, mp_request, mp_maindataset, mp_coreversions, mp_metaversions,
+    #mp_corecitation, mp_corpuscitation, mp_meta, mp_corpus
+    
     def __init__(self, key): 
         try:
             self.api_key = key
@@ -36,7 +39,7 @@ class Manifesto(object):
                           '<=' : operator.le}
                           
     
-    def meta_format(self, ids):
+    def __meta_format__(self, ids):
         
         ids = ['keys[]=' + id_ for id_ in ids]
         ids = '&'.join(ids)
@@ -44,7 +47,7 @@ class Manifesto(object):
         return ids
     
     
-    def text_format(self, ids):
+    def __text_format__(self, ids):
         
         ids = ['keys[]=' + id_ for id_ in ids]
         ids = '&'.join(ids)
@@ -52,7 +55,7 @@ class Manifesto(object):
         return ids
     
         
-    def mp_request(self, fun, params = None, version = None):
+    def __mp_request__(self, fun, params = None, version = None):
         
         fun = self.manifesto_functions[fun]
 
@@ -60,12 +63,12 @@ class Manifesto(object):
             version = '&version=' + version
             
             if fun == self.manifesto_functions['text']:
-                return requests.get(self.manifesto_api + fun + self.key_text + '&' + self.text_format(params) + version)
+                return requests.get(self.manifesto_api + fun + self.key_text + '&' + self.__text_format__(params) + version)
             
             elif fun == self.manifesto_functions['meta']:
                 print("test2")
-                print(self.manifesto_api + fun + self.key_text + '&' + self.meta_format(params) + version)
-                return requests.get(self.manifesto_api + fun + self.key_text + '&' + self.meta_format(params) + version)
+                print(self.manifesto_api + fun + self.key_text + '&' + self.__meta_format__(params) + version)
+                return requests.get(self.manifesto_api + fun + self.key_text + '&' + self.__meta_format__(params) + version)
                 
         elif not params == None:          
             return requests.get(self.manifesto_api + fun + self.key_text + '&key=' + params)
@@ -85,7 +88,7 @@ class Manifesto(object):
         else:
             version = version
             
-        r = self.mp_request(fun = 'main', params =  version)
+        r = self.__mp_request__(fun = 'main', params =  version)
                       
         jslist = json.loads(r.text)
                
@@ -98,7 +101,7 @@ class Manifesto(object):
         
     def mp_coreversions(self):
         
-        r = self.mp_request(fun = 'versions')
+        r = self.__mp_request__(fun = 'versions')
         self.versions = pd.DataFrame(json.loads(r.text)['datasets'])
         
         return self.versions
@@ -106,7 +109,7 @@ class Manifesto(object):
         
     def mp_metaversions(self):
         
-        r = self.mp_request(fun = 'metaversions')
+        r = self.__mp_request__(fun = 'metaversions')
         self.metaversions = pd.DataFrame(json.loads(r.text))
         
         return self.metaversions
@@ -114,7 +117,7 @@ class Manifesto(object):
         
     def mp_corecitation(self, key):
         
-        r = self.mp_request(fun = 'corecitation', params = key)
+        r = self.__mp_request__(fun = 'corecitation', params = key)
         cit = json.loads(r.text)['citation']
         
         return cit
@@ -122,7 +125,7 @@ class Manifesto(object):
     
     def mp_corpuscitation(self, key):
         
-        r = self.mp_request('corpuscitation', params = key)
+        r = self.__mp_request__('corpuscitation', params = key)
         cit = json.loads(r.text)['citation']
         
         return cit
@@ -172,7 +175,7 @@ class Manifesto(object):
             else: 
                 pass
                         
-        r = self.mp_request(fun = 'meta', params = keys, version = version)
+        r = self.__mp_request__(fun = 'meta', params = keys, version = version)
         
         return pd.DataFrame(json.loads(r.text)['items'])
     
@@ -192,10 +195,9 @@ class Manifesto(object):
         keys = self.mp_meta(version = version, keys = keys, date = date, country = country)
         keys = keys['manifesto_id']       
         
-        r = self.mp_request(fun = 'text', params = keys, version = version)
+        r = self.__mp_request__(fun = 'text', params = keys, version = version)
         
         r = json.loads(r.text)
         
         return r
-
 
