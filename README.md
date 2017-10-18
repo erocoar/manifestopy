@@ -13,7 +13,7 @@ manifesto = mp.Manifesto('API key goes here')
 ```
 
 ### functions
-* **mp_coreversions
+* **mp_coreversions**
 
 list the core dataset versions
 ```python
