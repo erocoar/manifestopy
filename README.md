@@ -1,6 +1,6 @@
 # manifestopy
 ## accessing manifesto project api in python
-manifestopy is a small package to use the basic functions of the manifesto project API in python.
+manifestopy is a small package to use the basic functions of the [Manifesto Project](https://manifesto-project.wzb.eu/) API in python.
 
 ### importing manifestopy
 ```python
@@ -55,6 +55,6 @@ get citation for corpus dataset
 manifesto.mp_corpuscitation(key)
 ```
 
-
+See also: [Manifesto Project API Documentation](https://manifesto-project.wzb.eu/information/documents/api)
 
 
